@@ -2,11 +2,11 @@
 
 ## Vad består den av?
 
-* Inloggningsystem
-* Databas för att lagra allting
+<!-- * Inloggningsystem -->
+<!-- * Databas för att lagra allting -->
 
 ## Vad kan man göra på den?
-* Skapa en användare och logga in
+<!-- * Skapa en användare och logga in -->
 * Göra en profilsida
 * Skapa, Redigera, Ta bort inlägg
   * Inägg kan ha text och bilder
