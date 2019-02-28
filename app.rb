@@ -32,6 +32,17 @@ get('/profile') do
     end
 end
 
+get('/edit') do
+    if session[:name] == nil
+        redirect('/')
+    else
+        slim(:edit)
+    end
+end
+
+post('/addtext') do
+end
+
 get('/create') do
     slim(:create)
 end
