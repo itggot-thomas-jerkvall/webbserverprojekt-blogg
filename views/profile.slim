@@ -1,2 +1,8 @@
 a href="/edit"
     p edit
+
+section
+    - posts.each do |posts|
+            article
+                p #{posts["Text"]}
+                img src="/posts/posts#{"Images"}"

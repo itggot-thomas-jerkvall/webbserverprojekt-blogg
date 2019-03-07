@@ -6,41 +6,79 @@ require 'byebug'
 require 'BCrypt'
 enable :sessions
 
-
+#before do
+#    if session
+#end
 get('/') do
     slim(:index)
 end
 
+#kolla att man är inloggad med Id inte namn!!
 post('/log') do
     db = SQLite3::Database.new("db/Database.db")
     db.results_as_hash = true
 
-    result = db.execute("SELECT username, password FROM users WHERE users.username = ?", params["name"])
+    result = db.execute("SELECT Id, username, password FROM users WHERE users.username = ?", params["name"])
     if result.length > 0 && BCrypt::Password.new(result.first["password"]) == params["password"]
-        session[:name] = result.first["username"] 
+        session[:name] = result.first["username"]
+        session[:Id] = result.first["Id"]
         redirect('/profile')
     else
         redirect('/')
     end
 end
 
+#
 get('/profile') do
-    if session[:name] == nil
+    db = SQLite3::Database.new("db/Database.db")
+    db.results_as_hash = true
+
+    if session[:Id] == nil
         redirect('/')
     else
-        slim(:profile)
+        result =  db.execute("SELECT Text, Images FROM profile WHERE User_Id = ?", session[:Id])
+        
+        slim(:profile, locals:{
+            posts: result
+        })
     end
+end
+
+get('/profile/Id') do
+
 end
 
 get('/edit') do
-    if session[:name] == nil
+    db = SQLite3::Database.new("db/Database.db")
+    db.results_as_hash = true
+
+    if session[:Id] == nil
         redirect('/')
     else
-        slim(:edit)
+        result =  db.execute("SELECT Id, Text, Images FROM profile WHERE User_Id = ?", session[:Id])
+        
+        slim(:edit, locals:{
+            posts: result
+        })
     end
 end
 
+post('/edit/:id/delete') do
+    db = SQLite3::Database.new("db/Database.db")
+    db.results_as_hash = true
+
+    db.execute("DELETE FROM profile WHERE Id = ?", params["id"])
+
+    redirect('/edit')
+end
+
 post('/addtext') do
+    db = SQLite3::Database.new("db/Database.db")
+    db.results_as_hash = true
+
+    db.execute("INSERT INTO profile(Text, Images, User_Id) VAlUES(?, ?, ?)", params["text"], params["image"], session[:Id])
+
+    redirect('/profile')
 end
 
 get('/create') do

@@ -1,6 +1,17 @@
 a href="/profile"
     p done
 
+h2 New post
+
 form action="addtext" method="POST"
-    input type="text" placeholder="New post" name="text"
+    input type="text" placeholder="Text" name="text"
+    input type="text" placeholder="Images" name="image"
     button type="submit" Submit
+
+section
+    - posts.each do |posts|
+            article
+                form action="/edit/#{posts["Id"]}/delete" method="post"
+                    button type="submit" Delete
+                p #{posts["Text"]}
+                img src="/posts/posts#{"Images"}"
