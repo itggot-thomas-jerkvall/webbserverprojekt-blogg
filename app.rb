@@ -44,8 +44,15 @@ get('/profile') do
     end
 end
 
-get('/profile/Id') do
+post('/search') do
+    db = SQLite3::Database.new("db/Database.db")
+    db.results_as_hash = true
 
+    result = db.execute("SELECT Text, Images, username FROM profile INNER JOIN users ON profile.User_Id = users.Id WHERE users.username = ?", params["search"])
+    p result
+    slim(:searchedblogg, locals:{
+        posts: result.first
+        })
 end
 
 get('/edit') do

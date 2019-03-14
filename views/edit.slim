@@ -8,10 +8,12 @@ form action="addtext" method="POST"
     input type="text" placeholder="Images" name="image"
     button type="submit" Submit
 
+br
+
 section
     - posts.each do |posts|
             article
-                form action="/edit/#{posts["Id"]}/delete" method="post"
-                    button type="submit" Delete
                 p #{posts["Text"]}
                 img src="/posts/posts#{"Images"}"
+                form action="/edit/#{posts["Id"]}/delete" method="post"
+                    button type="submit" Delete
