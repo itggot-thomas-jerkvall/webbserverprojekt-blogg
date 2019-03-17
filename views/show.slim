@@ -1,0 +1,10 @@
+p search for a blogg
+form action="search" method="POST"
+    input type="text" placeholder="Search" name="search"
+    button type="submit" Search
+
+section
+    - profiles.each do |profiles|
+            article
+                form action="/showprofile/#{profiles["username"]}" method="POST"
+                    button type="submit" #{profiles["username"]}

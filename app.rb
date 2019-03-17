@@ -49,9 +49,10 @@ post('/search') do
     db.results_as_hash = true
 
     result = db.execute("SELECT Text, Images, username FROM profile INNER JOIN users ON profile.User_Id = users.Id WHERE users.username = ?", params["search"])
-    p result
+    
     slim(:searchedblogg, locals:{
-        posts: result.first
+        posts: result,
+        first: result.first
         })
 end
 
@@ -106,4 +107,39 @@ end
 post('/logout') do
     session.destroy
     redirect('/')
+end
+
+get('/show') do
+    if session[:Id] == nil
+        redirect('/')
+    else
+        db = SQLite3::Database.new("db/Database.db")
+        db.results_as_hash = true
+
+        result =  db.execute("SELECT Id, username FROM users")
+        
+        slim(:show, locals:{
+            profiles: result
+        })
+    end
+end
+
+post('/showprofile/:username') do
+    if session[:Id] == nil
+        redirect('/')
+    else
+        db = SQLite3::Database.new("db/Database.db")
+        db.results_as_hash = true
+
+        id = db.execute("SELECT Id FROM users WHERE username=?", params["username"])
+        
+        result =  db.execute("SELECT Id, Text, Images FROM profile WHERE User_Id = ?", id.first["Id"])
+        
+        username = {"username" => params["username"]}
+
+        slim(:searchedblogg, locals:{
+            posts: result,
+            first: username
+            })
+    end
 end
